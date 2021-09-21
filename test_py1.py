@@ -10,9 +10,10 @@ def testGetLocalNumber():
 
 def testGetClassNumber():
     number_two = mainclass.MainClass.getClassNumber()
-    if number_two > 45:
+    expected_max_value = 45
+    if number_two > expected_max_value:
         (print("The number is > 45, it's", number_two))
-    assert number_two > 45, "The number is <= 45"
+    assert number_two > expected_max_value, "The number is <= 45"
 
 def testGetClassString():
     string_one = mainclass.MainClass.getClassString()
