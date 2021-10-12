@@ -16,10 +16,10 @@ class CoreTestCase:
     }
     driver = webdriver.Remote(APPIUM_URL, desired_capabilities)
 
-    def setUp(self):
+    def set_up(self):
         self.driver = webdriver.Remote(self.APPIUM_URL, self.desired_capabilities)
 
-    def tearDown(self):
+    def tear_down(self):
         self.driver.quit()
 
     def rotate_screen_pt(self):
@@ -30,4 +30,3 @@ class CoreTestCase:
 
     def background_app(self, seconds):
         self.driver.background_app(seconds)
-

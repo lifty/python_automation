@@ -1,168 +1,163 @@
 import pytest
-from appium import webdriver
 from selenium.webdriver.common.by import By
 from lib.CoreTestCase import CoreTestCase
 from lib.ui.MainPageObject import MainPageObject
-from selenium.webdriver.support.ui import *
-from selenium.webdriver.support import expected_conditions
-from appium.webdriver.common.touch_action import TouchAction
-from selenium.webdriver.common import by
-import time
 
 
 class TestFirstTest(CoreTestCase):
 
-    def testSearchFieldIncludesText(self):
-        self.setUp()
-        MainPageObject.waitForElementAndClick(MainPageObject(),
-                                              By.XPATH, "//*[contains(@text,'Skip')]", "Cannot find Skip button", 5)
-        MainPageObject.assertElementHasText(MainPageObject(),
-                                            By.XPATH, "//*[@class='android.widget.TextView' and @resource-id='']",
+    def test_search_field_includes_text(self):
+        self.set_up()
+        MainPageObject.wait_for_element_and_click(MainPageObject(self.driver),
+                                                  By.XPATH, "//*[contains(@text,'Skip')]", "Cannot find Skip button", 5)
+        MainPageObject.assert_element_has_text(MainPageObject(self.driver),
+                                               By.XPATH, "//*[@class='android.widget.TextView' and @resource-id='']",
                                             "Search Wikipedia", "The element does not contain expected text value", 5)
-        self.tearDown()
+        self.tear_down()
 
-    # def testFindArticlesAndCancelSearch(self):
-    #     self.setUp()
-    #     self.waitForElementAndClick(
-    #         By.XPATH, "//*[contains(@text,'Skip')]", "Cannot find Skip button", 5)
-    #     self.waitForElementAndClick(
-    #         By.ID, "org.wikipedia:id/search_container", "Cannot find 'Search Wikipedia' input", 5)
-    #     self.waitForElementAndSendKeys(
-    #         By.XPATH, "//*[contains(@text,'Search Wikipedia')]", "Cannot find Search field element", 5, "Java")
-    #     element_sum_before = len(self.driver.find_elements(By.ID, "org.wikipedia:id/page_list_item_title"))
-    #     assert element_sum_before > 1,\
-    #         "The number of articles is " + element_sum_before + ", we are expecting at least several elements"
-    #     self.waitForElementAndClear(By.ID, "org.wikipedia:id/search_src_text", "Cannot clear the element", 5)
-    #     self.waitForElementNotPresent(
-    #         By.ID, "org.wikipedia:id/page_list_item_title", "The element is still on the screen", 5)
-    #     element_sum_after = len(self.driver.find_elements(By.ID, "org.wikipedia:id/page_list_item_title"))
-    #     element_sum_expected = 0
-    #     assert element_sum_after == element_sum_expected,\
-    #         "The number of articles is " + element_sum_after + ", expected " + element_sum_expected
-    #     self.tearDown()
-    #
-    # def testCheckWordInSearchResults(self):
-    #     self.setUp()
-    #     self.waitForElementAndClick(
-    #         By.XPATH, "//*[contains(@text,'Skip')]",
-    #         "Cannot find Skip button", 5)
-    #     self.waitForElementAndClick(
-    #         By.ID, "org.wikipedia:id/search_container",
-    #         "Cannot find 'Search Wikipedia' input", 5)
-    #     input_key = "Java"
-    #     self.waitForElementAndSendKeys(
-    #         By.XPATH, "//*[contains(@text,'Search Wikipedia')]",
-    #         "Cannot find Search field element", 5, input_key)
-    #     self.waitForElementPresent(
-    #         By.XPATH, "//*[@class='android.view.ViewGroup' and @clickable='true']",
-    #         "Cannot find at least one article", 5)
-    #     element_groups = self.driver.find_elements(
-    #         By.XPATH, "//*[@class='android.view.ViewGroup' and @clickable='true']")
-    #     element_sum = len(element_groups)
-    #     assert len(element_groups) > 0,\
-    #         "The number of articles is " + str(element_sum) + ", we are expecting at least 1"
-    #     iteration = 0
-    #     for i in element_groups:
-    #         create_xpath = str("//*[@class='android.view.ViewGroup' and @clickable='true' and @index=") \
-    #                     + str(iteration) + "]//*[contains(@text, '" + input_key + "')]"
-    #         self.waitForElementPresent(
-    #             By.XPATH, create_xpath,
-    #             "Value " + input_key + " is not found in an article with index " + str(iteration), 5)
-    #         iteration += 1
-    #     self.tearDown()
-    #
-    # def testSaveTwoArticles(self):
-    #     self.setUp()
-    #     self.waitForElementAndClick(
-    #         By.XPATH, "//*[contains(@text,'Skip')]",
-    #         "Cannot find Skip button", 5)
-    #     self.waitForElementAndClick(
-    #         By.ID, "org.wikipedia:id/search_container",
-    #         "Cannot find 'Search Wikipedia' input", 5)
-    #     input_key = "Java"
-    #     self.waitForElementAndSendKeys(
-    #         By.XPATH, "//*[contains(@text,'Search Wikipedia')]",
-    #         "Cannot find Search field element", 5, input_key)
-    #     self.waitForElementAndClick(
-    #         By.XPATH, "//*[@text='Object-oriented programming language']",
-    #         "Cannot find searched article", 5)
-    #     self.waitForElementAndClick(
-    #         By.XPATH, "//android.widget.TextView[@text='Save']",
-    #         "Cannot find Save button", 5)
-    #     self.waitForElementAndClick(
-    #         By.XPATH, "//android.widget.ImageButton[@content-desc='Navigate up']",
-    #         "Cannot find Back button", 5)
-    #     self.waitForElementAndClick(
-    #         By.XPATH, "//*[@text='Indonesian island']",
-    #         "Cannot find searched article", 5)
-    #     self.waitForElementAndClick(
-    #         By.XPATH, "//android.widget.TextView[@text='Save']",
-    #         "Cannot find Save button", 5)
-    #     self.waitForElementAndClick(
-    #         By.XPATH, "//android.widget.ImageButton[@content-desc='Navigate up']",
-    #         "Cannot find Back button", 5)
-    #     self.waitForElementAndClick(
-    #         By.XPATH, "//android.widget.ImageButton[@index=0]",
-    #         "Cannot find Back button", 5)
-    #     self.waitForElementAndClick(
-    #         By.XPATH, "//android.widget.FrameLayout[@content-desc='Saved']",
-    #         "Cannot find Saved button", 5)
-    #     self.waitForElementAndClick(
-    #         By.XPATH, "//*[@resource-id='org.wikipedia:id/item_reading_list_statistical_description' and contains(@text,'2 articles')]",
-    #         "Cannot find a list with 2 articles", 5)
-    #     self.swipeElementToLeft(
-    #         By.XPATH, "//*[@resource-id='org.wikipedia:id/page_list_item_description' and @text='Object-oriented programming language']",
-    #         "Cannot find saved article")
-    #     self.waitForElementNotPresent(
-    #         By.XPATH, "//*[@resource-id='org.wikipedia:id/page_list_item_description' and @text='Object-oriented programming language']",
-    #         "Cannot delete saved article", 5)
-    #     self.waitForElementAndClick(
-    #         By.XPATH, "//*[@resource-id='org.wikipedia:id/page_list_item_description' and @text='Indonesian island']",
-    #         "Cannot find and click the article that should stay in the list", 5)
-    #     self.waitForElementPresent(
-    #         By.XPATH, "//android.webkit.WebView[@content-desc='Java']//*[contains(@content-desc,'Javanese')]",
-    #         "Cannot prove the article is the expected one", 15)
-    #     self.tearDown()
-    #
-    # def testCheckArticleTitle(self):
-    #     self.setUp()
-    #     self.waitForElementAndClick(
-    #         By.XPATH, "//*[contains(@text,'Skip')]",
-    #         "Cannot find Skip button", 5)
-    #     self.waitForElementAndClick(
-    #         By.ID, "org.wikipedia:id/search_container",
-    #         "Cannot find 'Search Wikipedia' input", 5)
-    #     input_key = "Java"
-    #     self.waitForElementAndSendKeys(
-    #         By.XPATH, "//*[contains(@text,'Search Wikipedia')]",
-    #         "Cannot find Search field element", 5, input_key)
-    #     self.waitForElementAndClick(
-    #         By.XPATH, "//*[@text='Object-oriented programming language']",
-    #         "Cannot find searched article", 5)
-    #     self.assertElementPresent(
-    #         By.ID, "org.wikipedia:id/view_page_title_text",
-    #         "Cannot find the title of the article")
-    #     self.tearDown()
-    #
-    # def testScreenRotation(self):
-    #     self.setUp()
-    #     self.waitForElementAndClick(
-    #         By.XPATH, "//*[contains(@text,'Skip')]",
-    #         "Cannot find Skip button", 5)
-    #     self.waitForElementAndClick(
-    #         By.ID, "org.wikipedia:id/search_container",
-    #         "Cannot find 'Search Wikipedia' input", 5)
-    #     self.waitForElementPresent(
-    #         By.XPATH, "//*[contains(@text,'Search Wikipedia')]",
-    #         "Cannot find Search field element", 5)
-    #     self.rotateScreenLS()
-    #     self.assertElementPresentAndRerotate(
-    #         By.XPATH, "//*[contains(@text,'Search Wikipedia')]",
-    #         "Cannot find Search field element")
-    #     self.rotateScreenPT()
-    #     self.assertElementPresentAndRerotate(
-    #         By.XPATH, "//*[contains(@text,'Search Wikipedia')]",
-    #         "Cannot find Search field element")
+    def test_find_articles_and_cancel_search(self):
+        self.set_up()
+        MainPageObject.wait_for_element_and_click(MainPageObject(self.driver),
+                                                  By.XPATH, "//*[contains(@text,'Skip')]", "Cannot find Skip button", 5)
+        MainPageObject.wait_for_element_and_click(MainPageObject(self.driver),
+                                                  By.ID, "org.wikipedia:id/search_container", "Cannot find 'Search Wikipedia' input", 5)
+        MainPageObject.wait_for_element_and_send_keys(MainPageObject(self.driver),
+                                                      By.XPATH, "//*[contains(@text,'Search Wikipedia')]", "Cannot find Search field element", 5, "Java")
+        element_sum_before = len(self.driver.find_elements(By.ID, "org.wikipedia:id/page_list_item_title"))
+        assert element_sum_before > 1,\
+            "The number of articles is " + element_sum_before + ", we are expecting at least several elements"
+        MainPageObject.wait_for_element_and_clear(MainPageObject(self.driver), By.ID, "org.wikipedia:id/search_src_text", "Cannot clear the element", 5)
+        MainPageObject.wait_for_element_not_present(MainPageObject(self.driver),
+                                                    By.ID, "org.wikipedia:id/page_list_item_title", "The element is still on the screen", 5)
+        element_sum_after = len(self.driver.find_elements(By.ID, "org.wikipedia:id/page_list_item_title"))
+        element_sum_expected = 0
+        assert element_sum_after == element_sum_expected,\
+            "The number of articles is " + element_sum_after + ", expected " + element_sum_expected
+        self.tear_down()
+
+    def test_check_word_in_search_results(self):
+        self.set_up()
+        MainPageObject.wait_for_element_and_click(MainPageObject(self.driver),
+                                                  By.XPATH, "//*[contains(@text,'Skip')]",
+            "Cannot find Skip button", 5)
+        MainPageObject.wait_for_element_and_click(MainPageObject(self.driver),
+                                                  By.ID, "org.wikipedia:id/search_container",
+            "Cannot find 'Search Wikipedia' input", 5)
+        input_key = "Java"
+        MainPageObject.wait_for_element_and_send_keys(MainPageObject(self.driver),
+                                                      By.XPATH, "//*[contains(@text,'Search Wikipedia')]",
+            "Cannot find Search field element", 5, input_key)
+        MainPageObject.wait_for_element_present(MainPageObject(self.driver),
+                                                By.XPATH, "//*[@class='android.view.ViewGroup' and @clickable='true']",
+            "Cannot find at least one article", 5)
+        element_groups = self.driver.find_elements(
+            By.XPATH, "//*[@class='android.view.ViewGroup' and @clickable='true']")
+        element_sum = len(element_groups)
+        assert len(element_groups) > 0,\
+            "The number of articles is " + str(element_sum) + ", we are expecting at least 1"
+        iteration = 0
+        for i in element_groups:
+            create_xpath = str("//*[@class='android.view.ViewGroup' and @clickable='true' and @index=") \
+                        + str(iteration) + "]//*[contains(@text, '" + input_key + "')]"
+            MainPageObject.wait_for_element_present(MainPageObject(self.driver),
+                                                    By.XPATH, create_xpath,
+                "Value " + input_key + " is not found in an article with index " + str(iteration), 5)
+            iteration += 1
+        self.tear_down()
+
+    def test_save_two_articles(self):
+        self.set_up()
+        MainPageObject.wait_for_element_and_click(MainPageObject(self.driver),
+                                                  By.XPATH, "//*[contains(@text,'Skip')]",
+            "Cannot find Skip button", 5)
+        MainPageObject.wait_for_element_and_click(MainPageObject(self.driver),
+                                                  By.ID, "org.wikipedia:id/search_container",
+            "Cannot find 'Search Wikipedia' input", 5)
+        input_key = "Java"
+        MainPageObject.wait_for_element_and_send_keys(MainPageObject(self.driver),
+                                                      By.XPATH, "//*[contains(@text,'Search Wikipedia')]",
+            "Cannot find Search field element", 5, input_key)
+        MainPageObject.wait_for_element_and_click(MainPageObject(self.driver),
+                                                  By.XPATH, "//*[@text='Object-oriented programming language']",
+            "Cannot find searched article", 5)
+        MainPageObject.wait_for_element_and_click(MainPageObject(self.driver),
+                                                  By.XPATH, "//android.widget.TextView[@text='Save']",
+            "Cannot find Save button", 5)
+        MainPageObject.wait_for_element_and_click(MainPageObject(self.driver),
+                                                  By.XPATH, "//android.widget.ImageButton[@content-desc='Navigate up']",
+            "Cannot find Back button", 5)
+        MainPageObject.wait_for_element_and_click(MainPageObject(self.driver),
+                                                  By.XPATH, "//*[@text='Indonesian island']",
+            "Cannot find searched article", 5)
+        MainPageObject.wait_for_element_and_click(MainPageObject(self.driver),
+                                                  By.XPATH, "//android.widget.TextView[@text='Save']",
+            "Cannot find Save button", 5)
+        MainPageObject.wait_for_element_and_click(MainPageObject(self.driver),
+                                                  By.XPATH, "//android.widget.ImageButton[@content-desc='Navigate up']",
+            "Cannot find Back button", 5)
+        MainPageObject.wait_for_element_and_click(MainPageObject(self.driver),
+                                                  By.XPATH, "//android.widget.ImageButton[@index=0]",
+            "Cannot find Back button", 5)
+        MainPageObject.wait_for_element_and_click(MainPageObject(self.driver),
+                                                  By.XPATH, "//android.widget.FrameLayout[@content-desc='Saved']",
+            "Cannot find Saved button", 5)
+        MainPageObject.wait_for_element_and_click(MainPageObject(self.driver),
+                                                  By.XPATH, "//*[@resource-id='org.wikipedia:id/item_reading_list_statistical_description' and contains(@text,'2 articles')]",
+            "Cannot find a list with 2 articles", 5)
+        MainPageObject.swipe_element_to_left(MainPageObject(self.driver),
+                                             By.XPATH, "//*[@resource-id='org.wikipedia:id/page_list_item_description' and @text='Object-oriented programming language']",
+            "Cannot find saved article")
+        MainPageObject.wait_for_element_not_present(MainPageObject(self.driver),
+                                                    By.XPATH, "//*[@resource-id='org.wikipedia:id/page_list_item_description' and @text='Object-oriented programming language']",
+            "Cannot delete saved article", 5)
+        MainPageObject.wait_for_element_and_click(MainPageObject(self.driver),
+                                                  By.XPATH, "//*[@resource-id='org.wikipedia:id/page_list_item_description' and @text='Indonesian island']",
+            "Cannot find and click the article that should stay in the list", 5)
+        MainPageObject.wait_for_element_present(MainPageObject(self.driver),
+                                                By.XPATH, "//android.webkit.WebView[@content-desc='Java']//*[contains(@content-desc,'Javanese')]",
+            "Cannot prove the article is the expected one", 15)
+        self.tear_down()
+
+    def test_check_article_title(self):
+        self.set_up()
+        MainPageObject.wait_for_element_and_click(MainPageObject(self.driver),
+                                                  By.XPATH, "//*[contains(@text,'Skip')]",
+            "Cannot find Skip button", 5)
+        MainPageObject.wait_for_element_and_click(MainPageObject(self.driver),
+                                                  By.ID, "org.wikipedia:id/search_container",
+            "Cannot find 'Search Wikipedia' input", 5)
+        input_key = "Java"
+        MainPageObject.wait_for_element_and_send_keys(MainPageObject(self.driver),
+                                                      By.XPATH, "//*[contains(@text,'Search Wikipedia')]",
+            "Cannot find Search field element", 5, input_key)
+        MainPageObject.wait_for_element_and_click(MainPageObject(self.driver),
+                                                  By.XPATH, "//*[@text='Object-oriented programming language']",
+            "Cannot find searched article", 5)
+        MainPageObject.assert_element_present(MainPageObject(self.driver),
+                                              By.ID, "org.wikipedia:id/view_page_title_text",
+            "Cannot find the title of the article")
+        self.tear_down()
+
+    def test_screen_rotation(self):
+        self.set_up()
+        MainPageObject.wait_for_element_and_click(MainPageObject(self.driver),
+                                                  By.XPATH, "//*[contains(@text,'Skip')]",
+            "Cannot find Skip button", 5)
+        MainPageObject.wait_for_element_and_click(MainPageObject(self.driver),
+                                                  By.ID, "org.wikipedia:id/search_container",
+            "Cannot find 'Search Wikipedia' input", 5)
+        MainPageObject.wait_for_element_present(MainPageObject(self.driver),
+                                                By.XPATH, "//*[contains(@text,'Search Wikipedia')]",
+            "Cannot find Search field element", 5)
+        self.rotate_screen_ls()
+        MainPageObject.assert_element_present(MainPageObject(self.driver),
+                                              By.XPATH, "//*[contains(@text,'Search Wikipedia')]",
+            "Cannot find Search field element")
+        self.rotate_screen_pt()
+        MainPageObject.assert_element_present(MainPageObject(self.driver),
+                                              By.XPATH, "//*[contains(@text,'Search Wikipedia')]",
+            "Cannot find Search field element")
+        self.tear_down()
 
 
 #    _________________________________________________________________________________

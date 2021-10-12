@@ -1,77 +1,58 @@
 import time
-from lib.CoreTestCase import CoreTestCase
-from selenium.webdriver.support.ui import *
+from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 from appium.webdriver.common.touch_action import TouchAction
 
 
 class MainPageObject:
-    # def __init__(self):
-    #     self.driver = CoreTestCase.driver
+    def __init__(self, driver):
+        self.driver = driver
 
-    driver = CoreTestCase.driver
-
-    def waitForElementPresent(self, by, locator, error_message, timeout_seconds):
+    def wait_for_element_present(self, by, locator, error_message, timeout_seconds):
         time.sleep(1)
         element = WebDriverWait(self.driver, timeout_seconds).until(
             expected_conditions.presence_of_element_located((by, locator)), error_message)
         return element
 
-    def waitForElementNotPresent(self, by, locator, error_message, timeout_seconds):
+    def wait_for_element_not_present(self, by, locator, error_message, timeout_seconds):
         element = WebDriverWait(self.driver, timeout_seconds).until(
             expected_conditions.invisibility_of_element_located((by, locator)), error_message)
         return element
 
-    def waitForElementAndClick(self, by, locator, error_message, timeout_seconds):
-        element = self.waitForElementPresent(by, locator, error_message, timeout_seconds)
+    def wait_for_element_and_click(self, by, locator, error_message, timeout_seconds):
+        element = self.wait_for_element_present(by, locator, error_message, timeout_seconds)
         element.click()
         return element
 
-    def waitForElementAndSendKeys(self, by, locator, error_message, timeout_seconds, keys):
-        element = self.waitForElementPresent(by, locator, error_message, timeout_seconds)
+    def wait_for_element_and_send_keys(self, by, locator, error_message, timeout_seconds, keys):
+        element = self.wait_for_element_present(by, locator, error_message, timeout_seconds)
         element.send_keys(keys)
         self.driver.hide_keyboard()
         return element
 
-    def waitForElementAndClear(self, by, locator, error_message, timeout_seconds):
-        element = self.waitForElementPresent(by, locator, error_message, timeout_seconds)
+    def wait_for_element_and_clear(self, by, locator, error_message, timeout_seconds):
+        element = self.wait_for_element_present(by, locator, error_message, timeout_seconds)
         element.clear()
         return element
 
-    def assertElementHasText(self, by, locator, expected_value, error_message, timeout_seconds):
-        element = self.waitForElementPresent(by, locator, error_message, timeout_seconds)
+    def assert_element_has_text(self, by, locator, expected_value, error_message, timeout_seconds):
+        element = self.wait_for_element_present(by, locator, error_message, timeout_seconds)
         actual_value = element.get_attribute("text")
         assert actual_value == expected_value, error_message
         return element
 
-    def getAmountOfElements(self, by, locator):
+    def get_amount_of_elements(self, by, locator):
         elements = self.driver.find_elements(by, locator)
         return len(elements)
 
-    def rotateScreenPT(self):
-        self.driver.orientation = "PORTRAIT"
-
-    def rotateScreenLS(self):
-        self.driver.orientation = "LANDSCAPE"
-
-    def assertElementPresent(self, by, locator, error_message):
-        amount_of_elements = self.getAmountOfElements(by, locator)
+    def assert_element_present(self, by, locator, error_message):
+        amount_of_elements = self.get_amount_of_elements(by, locator)
         if amount_of_elements == 0:
             default_message = "An element '" + str(locator) + "' supposed to be presented"
             raise AssertionError(default_message + "\n" + error_message)
         return
 
-    def assertElementPresentAndRerotate(self, by, locator, error_message):
-        amount_of_elements = self.getAmountOfElements(by, locator)
-        if amount_of_elements == 0:
-            current_location = self.driver.orientation
-            if str(current_location) != "PORTRAIT":
-                self.rotateScreenPT()
-            default_message = "An element '" + str(locator) + "' supposed to be presented"
-            raise AssertionError(default_message + "\n" + error_message)
-        return
-
-    def swipeUp(self, time_of_swipe):
+    def swipe_up(self, time_of_swipe):
         action = TouchAction(self.driver)
         size = self.driver.get_window_size()
         x = size.width / 2
@@ -79,21 +60,21 @@ class MainPageObject:
         end_y = size.height * 0.2
         action.press(x, start_y).wait(time_of_swipe).move_to(x, end_y).release().perform()
 
-    def swipeUpQuick(self):
-        self.swipeUp(200)
+    def swipe_up_quick(self):
+        self.swipe_up(200)
 
-    def swipeUpToFindElement(self, by, locator, error_message, max_swipes):
+    def swipe_up_to_find_element(self, by, locator, error_message, max_swipes):
         already_swiped = 0
-        while self.getAmountOfElements(by, locator) == 0:
+        while self.get_amount_of_elements(by, locator) == 0:
             if already_swiped > max_swipes:
-                self.waitForElementPresent(by, locator, "Cannot find element by swiping up. \n" + error_message, 0)
+                self.wait_for_element_present(by, locator, "Cannot find element by swiping up. \n" + error_message, 0)
                 return
-            self.swipeUpQuick()
+            self.swipe_up_quick()
             time.sleep(1)
             already_swiped += 1
 
-    def swipeElementToLeft(self, by, locator, error_message):
-        element = self.waitForElementPresent(by, locator, error_message, 10)
+    def swipe_element_to_left(self, by, locator, error_message):
+        element = self.wait_for_element_present(by, locator, error_message, 10)
         left_x = element.location['x']
         right_x = left_x + element.size['width']
         upper_y = element.location['y']
