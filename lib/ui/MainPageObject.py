@@ -52,6 +52,13 @@ class MainPageObject:
             raise AssertionError(default_message + "\n" + error_message)
         return
 
+    def assert_element_not_present(self, by, locator, error_message):
+        amount_of_elements = self.get_amount_of_elements(by, locator)
+        if amount_of_elements > 0:
+            default_message = "An element '" + str(locator) + "' supposed not to be presented"
+            raise AssertionError(default_message + "\n" + error_message)
+        return
+
     def swipe_up(self, time_of_swipe):
         action = TouchAction(self.driver)
         size = self.driver.get_window_size()
